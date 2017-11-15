@@ -30,14 +30,10 @@ def GetNearestNeighbours(x,y):
 	neighbours = list()
 	L = GetSize()
 	
-	if x>0:
-		neighbours.append([x-1,y])
-	if y>0:
-		neighbours.append([x,y-1])
-	if x<(L-1):
-		neighbours.append([x+1,y])
-	if y<(L-1):
-		neighbours.append([x,y+1])
+	neighbours.append([x-1%(L-1),y])
+	neighbours.append([x,y-1%(L-1)])
+	neighbours.append([x+1%(L-1),y])
+	neighbours.append([x,y+1%(L-1)])
 	return neighbours
 
 def InitRandomSpins():
@@ -121,25 +117,27 @@ def Magnetisation(lattice):
 
 def Metropolis(lattice):
 	L = len(lattice)
-	x1 = random.randint(0,L-1)
-	x2 = random.randint(0,L-1)
-	s_x = lattice[x1][x2]
-	J = GetJ()
-	neighbors = GetNearestNeighbours(x1,x2)
-	values = list()
-	for neighbor in neighbors:
-		values.append(lattice[neighbor[0]][neighbor[1]])
-	nSum = sum(values)
-	#H=-J*SUM(neighbors)
-	#delH = -J*(before-after)
-	before = 0
-	for n in values:
-		before += n*s_x
-	after = -before
-	delH = J*(after-before)
-	Pacc = min(1,math.exp(-delH))
-	r = random.uniform(0,1)
-	if r>Pacc:
-		lattice[x1][x2]=-s_x
+	for i in range(L**2):
+		x1 = random.randint(0,L-1)
+		x2 = random.randint(0,L-1)
+		s_x = lattice[x1][x2]
+		J = GetJ()
+		T = GetTemp()
+		neighbors = GetNearestNeighbours(x1,x2)
+		values = list()
+		for neighbor in neighbors:
+			values.append(lattice[neighbor[0]][neighbor[1]])
+		nSum = sum(values)
+		#H=-J*SUM(neighbors)
+		#delH = -J*(before-after)
+		before = 0
+		for n in values:
+			before += n*s_x
+		after = -before
+		delH = -J*(after-before)
+		Pacc = min(1,math.exp(-delH/T))
+		r = random.uniform(0,1)
+		if r<Pacc:
+			lattice[x1][x2]=-s_x
 	return lattice
 

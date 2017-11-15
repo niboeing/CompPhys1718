@@ -7,11 +7,11 @@ from ROOT import TGraph,TCanvas
 ex=6
 
 #lattice size
-L1 = 4
-L2 = 4
+L1 = 10
+L2 = 10
 
 #sample size
-N = 1000
+N = 10000
 
 if ex==4:
 	#estimate magnetisation using random configs
@@ -37,21 +37,22 @@ if ex==4:
 	time.sleep(5000)
 
 if ex==6:
-	#simple estimate with metropolis algorithm
+	#simple estimate with metropolis algorit
 	magSum = 0.
 	spinConfig = InitRandomSpins()
-	c1 = TCanvas('c1','Mag using Metropolis',200,10,700,500)
-	graph = TGraph()
-	graph.Set(N/10)
+	#		c1 = TCanvas('c1','Mag using Metropolis',200,10,700,500)
+	#		graph = TGraph()
+	#		graph.Set(N/10)
 	for i in range(N):
 		if i%10==0:
 			magSum+=Magnetization(spinConfig)
+			print '|m|='+str(magSum/(i/10+1))
 		spinConfig=Metropolis(spinConfig)
-		if i%10==0:
-			graph.SetPoint((i+1)/10,i,magSum/(i+1))
-	print spinConfig
-	print 'Magnetization estimate for L=' + str(L1) + ' and N=' + str(N) + ' is |m|=' + str(magSum/N*10)
-	graph.Draw()
-	time.sleep(5000)
+	#			if i%10==0:
+	#				graph.SetPoint((i+1)/10,i,magSum/(i+1))
+	print 'Magnetization estimate for L=' + str(L1) + ' and N=' + str(N) + ' is |m|=' + str(magSum/N)
+#	graph.Draw()
+#	time.sleep(5000)
 		
+
 	
