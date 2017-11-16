@@ -11,7 +11,7 @@ L1 = 10
 L2 = 10
 
 #sample size
-N = 10000
+N = 1000
 
 if ex==4:
 	#estimate magnetisation using random configs
@@ -40,17 +40,20 @@ if ex==6:
 	#simple estimate with metropolis algorit
 	magSum = 0.
 	spinConfig = InitRandomSpins()
+	#timing
+	startTime = time.clock()
 	#		c1 = TCanvas('c1','Mag using Metropolis',200,10,700,500)
 	#		graph = TGraph()
 	#		graph.Set(N/10)
 	for i in range(N):
 		if i%10==0:
 			magSum+=Magnetization(spinConfig)
-			print '|m|='+str(magSum/(i/10+1))
+	#		print '|m|='+str(magSum/(i/10+1))
 		spinConfig=Metropolis(spinConfig)
 	#			if i%10==0:
 	#				graph.SetPoint((i+1)/10,i,magSum/(i+1))
-	print 'Magnetization estimate for L=' + str(L1) + ' and N=' + str(N) + ' is |m|=' + str(magSum/N)
+	print 'Magnetization estimate for L=' + str(GetSize()) + ' and N=' + str(N) + ' is |m|=' + str(magSum/(N/10+1))
+	print 'Time taken for N=' + str(N) + ': ' + str(time.clock()-startTime) + ' seconds'
 #	graph.Draw()
 #	time.sleep(5000)
 		
