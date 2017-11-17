@@ -1,5 +1,6 @@
 *.png
 *.pyc
+prof
 
 performance.txt
-
+stats.txt

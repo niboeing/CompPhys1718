@@ -1,30 +1,15 @@
 #!/usr/bin/env python
 
-import random,math,sys
+import random,math,sys,time
 
 from helpers import *
 
-g_T = 5.
+import numpy as np
+
 g_La = 3 #obsolete
 g_Lt = 3 #obsolete
-g_J = 1.
-g_kB = 1.
 	
 # ising model
-
-def IsNearestNeighbour(x,y):
-	sumx = x[0]+x[1]
-	sumy = y[0]+y[1]
-	if sumx+1==sumy or sumx-1==sumy:
-		return True
-	return False
-
-def IsNearestNeighbour(i1,j1,i2,j2):
-	sumx = i1+j1
-	sumy = i2+j2
-	if sumx+1==sumy or sumx-1==sumy:
-		return True
-	return False
 
 def GetNearestNeighbours(x,y):
 	neighbours = list()
@@ -39,6 +24,7 @@ def GetNearestNeighbours(x,y):
 def InitRandomSpins():
 	#creates a lattice of size L with randomly aligned spins
 	L = GetSize()
+#	lattice = np.empty((L,L),dtype=np.int)
 	lattice = [[0 for i in range(L)] for j in range(L)]
 	for i in range(L):
 		for j in range(L):
@@ -109,36 +95,24 @@ def Magnetization(lattice):
 			msum += lattice[i][j]
 	
 	msum = abs(msum)/(L**2)
-	Output(str(msum))
 	return msum
 
 def Magnetisation(lattice):
 	return Magnetization(lattice)
 
-def Metropolis(lattice):
+def Metropolis(lattice,J,T):
 	L = len(lattice)
-	J = GetJ()
-	T = GetTemp()
 	for i in range(L**2):
-		x1 = random.randint(0,L-1)
-		x2 = random.randint(0,L-1)
+#		x1 = random.randint(0,L-1)
+#		x2 = random.randint(0,L-1)
+		x1,x2 = random.randint(0,L-1),random.randint(0,L-1)
 		s_x = lattice[x1][x2]
-#		neighbors = GetNearestNeighbours(x1,x2)
-#		values = list()
-#		for neighbor in neighbors:
-#			values.append(lattice[neighbor[0]][neighbor[1]])
-#		nSum = sum(values)
-		#H=-J*SUM(neighbors)
-		#delH = -J*(before-after)
-#		before = 0
-#		for n in values:
-#			before += n*s_x
-#		after = -before
-	 	nSum = s_x*(lattice[(x1-1)%(L-1)][x2] + lattice[x1][(x2-1)%(L-1)] + lattice[(x1+1)%(L-1)][x2] + lattice[x1][(x2+1)%(L-1)])
-		delH = -J*(-2*nSum)
-		Pacc = min(1,math.exp(-delH/T))
-		r = random.uniform(0,1)
-		if r<Pacc:
+	 	Pacc = min(1,math.exp(-2*J/T*s_x*(lattice[(x1-1)%(L-1)][x2] + lattice[x1][(x2-1)%(L-1)] + lattice[(x1+1)%(L-1)][x2] + lattice[x1][(x2+1)%(L-1)])))
+#		delH = -J*(-2*nSum)
+#		Pacc = min(1,math.exp(-delH/T))
+#		r = random.uniform(0,1)
+#		if r<Pacc:
+		if random.uniform(0,1)<Pacc:
 			lattice[x1][x2]=-s_x
 	return lattice
 
