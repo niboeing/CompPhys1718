@@ -16,7 +16,7 @@ if size==4:
 elif size==10:
 	N=10000
 else:
-	N=1000
+	N=100000
 
 #if ex==4:
 #	#estimate magnetisation using random configs
@@ -51,7 +51,7 @@ if ex==6:
 	for i in range(N):
 		if i%10==0:
 			magSum+=Magnetization(spinConfig)
-#			print '|m|='+str(magSum/(i/10+1))
+			print '|m|='+str(magSum/(i/10+1))
 		spinConfig=Metropolis(spinConfig,J,T)
 	print 'Magnetization estimate for L=' + str(GetSize()) + ' and N=' + str(N) + ' is |m|=' + str(magSum/(N/10+1))
 	print 'Time taken for N=' + str(N) + ': ' + str(time.clock()-startTime) + ' seconds'
